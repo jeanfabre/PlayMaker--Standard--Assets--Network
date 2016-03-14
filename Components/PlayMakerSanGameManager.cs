@@ -1,5 +1,4 @@
 ﻿// (c) Copyright HutongGames, LLC 2010-2016. All rights reserved.
-
 // this script is a straight port of GameManager from Tanks Unet project, adapted and generalized for similar setup.
 
 using System.Collections;
@@ -8,6 +7,8 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using UnityStandardAssets.Network;
+
+using HutongGames.PlayMaker;
 
 public class PlayMakerSanGameManager : NetworkBehaviour
 {
@@ -73,6 +74,14 @@ public class PlayMakerSanGameManager : NetworkBehaviour
 		tmp.Setup();
 
 		m_Players.Add(tmp);
+
+		// forward to PlayMaker as well
+		Fsm.EventData.StringData = lobbyPlayer.nameInput.text;
+		Fsm.EventData.ColorData = lobbyPlayer.playerColor;
+		Fsm.EventData.GameObjectData = player;
+
+		PlayMakerFSM.BroadcastEvent ("UNET/ SAN / ON LOBBY SERVER SCENE LOADED FOR PLAYER");
+
 	}
 
 	public void RemovePlayer(GameObject player)
