@@ -12,10 +12,12 @@ using HutongGames.PlayMaker;
 
 public class PlayMakerSanGameManager : NetworkBehaviour
 {
-	static public PlayMakerSanGameManager s_Instance;
+	static public PlayMakerSanGameManager Instance;
 
 	//this is static so player prefab instance can be added even without the scene loaded (i.e. from lobby)
 	static public List<PlayMakerSanPlayerManager> m_Players = new List<PlayMakerSanPlayerManager>(); // A collection of managers for enabling and disabling different aspects of the player Prefab Instance.
+
+	public bool debug = false;
 
 	public int m_NumRoundsToWin = 5;          // The number of rounds a single player has to win to win the game.
 	public float m_StartDelay = 3f;           // The delay between the start of RoundStarting and RoundPlaying phases.
@@ -43,7 +45,7 @@ public class PlayMakerSanGameManager : NetworkBehaviour
 
 	void Awake()
 	{
-		s_Instance = this;
+		Instance = this;
 	}
 
 	[ServerCallback]
@@ -65,6 +67,9 @@ public class PlayMakerSanGameManager : NetworkBehaviour
 	/// lp.slot, lp.playerColor, lp.nameInput.text, lp.playerControllerId
 	static public void AddPlayer(GameObject player, LobbyPlayer lobbyPlayer) // int playerNum, Color c, string name, int localID);
 	{
+		Debug.Log("PlayMakerSanGameManager AddPlayer :"+player+" lobbyPlayer:"+lobbyPlayer,Instance);
+
+		/*
 		PlayMakerSanPlayerManager tmp = new PlayMakerSanPlayerManager();
 		tmp.m_Instance = player;
 		tmp.m_PlayerNumber = lobbyPlayer.playerControllerId;
@@ -74,13 +79,15 @@ public class PlayMakerSanGameManager : NetworkBehaviour
 		tmp.Setup();
 
 		m_Players.Add(tmp);
+		*/
 
 		// forward to PlayMaker as well
 		Fsm.EventData.StringData = lobbyPlayer.nameInput.text;
 		Fsm.EventData.ColorData = lobbyPlayer.playerColor;
 		Fsm.EventData.GameObjectData = player;
 
-		PlayMakerFSM.BroadcastEvent ("UNET/ SAN / ON LOBBY SERVER SCENE LOADED FOR PLAYER");
+		Debug.Log ("BroadcastEvent");
+		PlayMakerFSM.BroadcastEvent ("UNET / SAN / ON LOBBY SERVER SCENE LOADED FOR PLAYER");
 
 	}
 
