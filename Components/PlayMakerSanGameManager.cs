@@ -86,7 +86,6 @@ public class PlayMakerSanGameManager : NetworkBehaviour
 		Fsm.EventData.ColorData = lobbyPlayer.playerColor;
 		Fsm.EventData.GameObjectData = player;
 
-		Debug.Log ("BroadcastEvent");
 		PlayMakerFSM.BroadcastEvent ("UNET / SAN / ON LOBBY SERVER SCENE LOADED FOR PLAYER");
 
 	}
