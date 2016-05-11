@@ -6,6 +6,7 @@ using System.Collections;
 using UnityEngine.Networking;
 
 
+
 public class PlayMakerSanPlayerLobbyHook : UnityStandardAssets.Network.LobbyHook  {
 
 	public bool debug = false;

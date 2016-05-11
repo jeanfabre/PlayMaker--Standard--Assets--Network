@@ -43,6 +43,18 @@ public class PlayMakerSanGameManager : NetworkBehaviour
 	private PlayMakerSanPlayerManager m_RoundWinner;          // Reference to the winner of the current round.  Used to make an announcement of who won.
 	private PlayMakerSanPlayerManager m_GameWinner;           // Reference to the winner of the game.  Used to make an announcement of who won.
 
+
+	static public string _PlayerName;
+	static public Color _PlayerColor;
+	static public GameObject _Player;
+
+	static public bool _addPlayerEventSent;
+
+	[Space]
+	[Header("Player")]
+	public string PlayerName;
+	public Color PlayerColor;
+
 	void Awake()
 	{
 		Instance = this;
@@ -51,12 +63,36 @@ public class PlayMakerSanGameManager : NetworkBehaviour
 	[ServerCallback]
 	private void Start()
 	{
+
+	
+
 		// Create the delays so they only have to be made once.
 		m_StartWait = new WaitForSeconds(m_StartDelay);
 		m_EndWait = new WaitForSeconds(m_EndDelay);
 
 		// Once the player have been created and the camera is using them as targets, start the game.
 		StartCoroutine(GameLoop());
+	}
+
+	void Update()
+	{
+		if (!_addPlayerEventSent) {
+
+			Debug.Log ("Update(): Sending UNET / SAN / ON LOBBY SERVER SCENE LOADED FOR PLAYER");
+			PlayerName = _PlayerName;
+			PlayerColor = _PlayerColor;
+
+
+			_addPlayerEventSent = true;
+			// forward to PlayMaker as well
+			Fsm.EventData.StringData = _PlayerName;
+			Fsm.EventData.ColorData = _PlayerColor;
+			Fsm.EventData.GameObjectData = _Player;
+
+
+			PlayMakerFSM.BroadcastEvent ("UNET / SAN / ON LOBBY SERVER SCENE LOADED FOR PLAYER");
+		}
+
 	}
 
 	/// <summary>
@@ -67,7 +103,7 @@ public class PlayMakerSanGameManager : NetworkBehaviour
 	/// lp.slot, lp.playerColor, lp.nameInput.text, lp.playerControllerId
 	static public void AddPlayer(GameObject player, LobbyPlayer lobbyPlayer) // int playerNum, Color c, string name, int localID);
 	{
-		Debug.Log("PlayMakerSanGameManager AddPlayer :"+player+" lobbyPlayer:"+lobbyPlayer,Instance);
+		Debug.Log("PlayMakerSanGameManager AddPlayer : <"+player+"> || lobbyPlayer: <"+lobbyPlayer+">",Instance);
 
 		/*
 		PlayMakerSanPlayerManager tmp = new PlayMakerSanPlayerManager();
@@ -81,12 +117,23 @@ public class PlayMakerSanGameManager : NetworkBehaviour
 		m_Players.Add(tmp);
 		*/
 
-		// forward to PlayMaker as well
-		Fsm.EventData.StringData = lobbyPlayer.nameInput.text;
-		Fsm.EventData.ColorData = lobbyPlayer.playerColor;
-		Fsm.EventData.GameObjectData = player;
+		_Player = player;
+		_PlayerName = lobbyPlayer.nameInput.text;
+		_PlayerColor = lobbyPlayer.playerColor;
 
-		PlayMakerFSM.BroadcastEvent ("UNET / SAN / ON LOBBY SERVER SCENE LOADED FOR PLAYER");
+		Debug.Log("Local Player name :"+_PlayerName+" Color:"+_PlayerColor);
+
+		if (!Instance == null) {
+
+			Debug.Log ("AddPlayer(): Sending UNET / SAN / ON LOBBY SERVER SCENE LOADED FOR PLAYER");
+			_addPlayerEventSent = true;
+			// forward to PlayMaker as well
+			Fsm.EventData.StringData = _PlayerName;
+			Fsm.EventData.ColorData = _PlayerColor;
+			Fsm.EventData.GameObjectData = _Player;
+
+			PlayMakerFSM.BroadcastEvent ("UNET / SAN / ON LOBBY SERVER SCENE LOADED FOR PLAYER");
+		}
 
 	}
 
