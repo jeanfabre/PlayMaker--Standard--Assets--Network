@@ -5,7 +5,7 @@ using UnityEngine;
 
 using UnityEngine.Networking;
 
-using UnityStandardAssets.Network;
+using Prototype.NetworkLobby;
 
 namespace HutongGames.PlayMaker.Actions
 {

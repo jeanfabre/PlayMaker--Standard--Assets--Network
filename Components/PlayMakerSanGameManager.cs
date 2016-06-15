@@ -6,7 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections.Generic;
-using UnityStandardAssets.Network;
+
+using Prototype.NetworkLobby;
 
 using HutongGames.PlayMaker;
 
@@ -123,7 +124,7 @@ public class PlayMakerSanGameManager : NetworkBehaviour
 
 		Debug.Log("Local Player name :"+_PlayerName+" Color:"+_PlayerColor);
 
-		if (!Instance == null) {
+		if (Instance != null) {
 
 			Debug.Log ("AddPlayer(): Sending UNET / SAN / ON LOBBY SERVER SCENE LOADED FOR PLAYER");
 			_addPlayerEventSent = true;
