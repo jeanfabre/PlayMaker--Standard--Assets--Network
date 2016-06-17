@@ -13,7 +13,6 @@ using Prototype.NetworkLobby;
 public class PlayMakerSanLobbyManagerProxy : MonoBehaviour {
 
 	[Tooltip("The LobbyManager in the Scene. Don't drop the Prefab itself, only the instance within the Lobby Scene Hierarchy")]
-	[Required]
 	public LobbyManager lobbyManager;
 
 	[Tooltip("If True, will output details over the activity. Turning it on when developing is recommanded")]
